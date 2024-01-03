@@ -1,23 +1,37 @@
-use regex::Regex;
 use std::fs;
 
 fn main() {
-    let regex_digits: Regex = Regex::new(r"(\d+)(.*\d)?").unwrap();
 
-    static FILE_PATH: &str = "FILE";
+    static FILE_PATH: &str = "src/testfile.txt";
     let contents: i64 = fs::read_to_string(FILE_PATH)
         .expect("file not found")
         .split("\n")
         .into_iter()
-        .map(|x| sum_numbers(&regex_digits, x))
+        .map(sum_numbers)
         .sum();
     println!("{}", contents);
 }
 
-fn sum_numbers(regex: &Regex, line: &str) -> i64 {
-    let iterate_digits = regex.captures(line).unwrap();
-    (iterate_digits[0].chars().nth(0).unwrap().to_string()
-        + &iterate_digits[0].chars().last().unwrap().to_string())
-        .parse()
+fn sum_numbers(line: &str) -> i64 {
+    let last = line
+        .chars()
+        .rfind(|character| match character.to_string().parse::<i64>() {
+            Ok(_) => true,
+            _ => false,
+        })
         .unwrap()
+        .to_string()
+        .parse::<i64>()
+        .unwrap();
+    let first = line
+        .chars()
+        .find(|character| match character.to_string().parse::<i64>() {
+            Ok(_) => true,
+            _ => false,
+        })
+        .unwrap()
+        .to_string()
+        .parse::<i64>()
+        .unwrap();
+    first * 10 + last
 }
