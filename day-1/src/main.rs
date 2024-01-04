@@ -1,14 +1,15 @@
 use std::fs;
 
 fn main() {
-    static FILE_PATH: &str = "PATH";
-    fs::read_to_string(FILE_PATH)
+    static FILE_PATH: &str = "src/testfile.txt";
+    let mut res = fs::read_to_string(FILE_PATH)
         .expect("file not found")
         .split("\n")
         .into_iter()
         .map(|n| sum_numbers(n.to_owned()))
         .sum::<i64>();
-    fs::read_to_string(FILE_PATH)
+    println!("{}", res);
+    res = fs::read_to_string(FILE_PATH)
         .expect("file not found")
         .split("\n")
         .into_iter()
@@ -25,28 +26,11 @@ fn main() {
         })
         .map(sum_numbers)
         .sum::<i64>();
+    println!("{}", res);
 }
 
 fn sum_numbers(line: String) -> i64 {
-    let last = line
-        .chars()
-        .rfind(|character| match character.to_string().parse::<i64>() {
-            Ok(_) => true,
-            _ => false,
-        })
-        .unwrap()
-        .to_string()
-        .parse::<i64>()
-        .unwrap();
-    let first = line
-        .chars()
-        .find(|character| match character.to_string().parse::<i64>() {
-            Ok(_) => true,
-            _ => false,
-        })
-        .unwrap()
-        .to_string()
-        .parse::<i64>()
-        .unwrap();
-    first * 10 + last
+    let numbers: Vec<i64> = line.matches(char::is_numeric).map(|x|x.parse::<i64>().unwrap()).collect();
+    numbers.first().unwrap() * 10 + numbers.last().unwrap()
+
 }
