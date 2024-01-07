@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, env, fs, ops::Index};
+use std::{collections::VecDeque, env, fs};
 
 static INDICES_TO_CHECK: [(isize, isize); 8] = [
     (-1, -1),
